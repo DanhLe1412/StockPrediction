@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:stock_prediction/screens/HomeScreen/home_screen.dart';
+import 'package:stock_prediction/screens/detail_screen/detail_screen.dart';
+import 'package:stock_prediction/screens/home_screen/home_screen.dart';
+
 
 void main() {
   runApp(StockPrediction());
@@ -20,7 +22,11 @@ class StockPrediction extends StatelessWidget {
             .textTheme
             .apply(bodyColor: Colors.white, displayColor: Colors.white),
       ),
-      home: HomeScreen(),
+      initialRoute: HomeScreen.route,
+      routes: {
+        '/': (_) => HomeScreen(),
+        '/stock_detail': (_) => DetailScreen(),
+      },
     );
   }
 }
