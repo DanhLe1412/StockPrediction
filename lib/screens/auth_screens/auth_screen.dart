@@ -30,7 +30,7 @@ class AuthScreen extends StatelessWidget {
           child: SingleChildScrollView(
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height,
+                maxHeight: MediaQuery.of(context).size.height - 16,
               ),
               child: Padding(
                 padding: const EdgeInsets.only(top: 32, bottom: 24),

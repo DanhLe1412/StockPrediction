@@ -2,19 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class Input extends StatefulWidget {
+  final TextEditingController? controller;
   String label;
   String hint;
   Widget? suffixIcon;
-
   bool obscureText;
 
-  Input(
-      {this.label = '',
-      this.hint = '',
-      this.suffixIcon,
-      this.obscureText = false,
-      Key? key})
-      : super(key: key);
+  Input({
+    this.label = '',
+    this.hint = '',
+    this.suffixIcon,
+    this.obscureText = false,
+    this.controller,
+    Key? key,
+  }) : super(key: key);
 
   @override
   _InputState createState() => _InputState();
@@ -39,6 +40,7 @@ class _InputState extends State<Input> {
         border.copyWith(borderSide: BorderSide(color: Colors.white70));
 
     return TextField(
+      controller: widget.controller,
       onChanged: (text) {
         setState(() {
           _value = text;

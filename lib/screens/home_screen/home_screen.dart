@@ -7,8 +7,6 @@ import 'package:stock_prediction/screens/home_screen/widgets/row_stocks.dart';
 import 'package:stock_prediction/screens/home_screen/widgets/search_box.dart';
 
 class HomeScreen extends StatelessWidget {
-  static final route = '/';
-
   const HomeScreen({Key? key}) : super(key: key);
 
   @override

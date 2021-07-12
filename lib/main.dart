@@ -1,16 +1,20 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:stock_prediction/constants.dart';
 import 'package:stock_prediction/screens/auth_screens/register_screen.dart';
 import 'package:stock_prediction/screens/auth_screens/login_screen.dart';
 import 'package:stock_prediction/screens/detail_screen/detail_screen.dart';
 import 'package:stock_prediction/screens/home_screen/home_screen.dart';
 import 'package:stock_prediction/screens/landing_page.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp();
   runApp(StockPrediction());
 }
 
 class StockPrediction extends StatelessWidget {
-  const StockPrediction({Key? key}) : super(key: key);
+  StockPrediction({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +30,14 @@ class StockPrediction extends StatelessWidget {
             .textTheme
             .apply(bodyColor: Colors.white, displayColor: Colors.white),
       ),
-      initialRoute: HomeScreen.route,
+      initialRoute: routes['initialRoute'],
       routes: {
-        '/': (_) => LandingPage(),
-        '/stock_detail': (_) => DetailScreen(),
-        '/sign_in': (_) => LoginScreen(),
-        '/register': (_) => RegisterScreen(),
+        routes['initialRoute']!: (_) => LandingPage(),
+        routes['landing_page']!: (_) => LandingPage(),
+        routes['home']!: (_) => HomeScreen(),
+        routes['stock_detail']!: (_) => DetailScreen(),
+        routes['sign_in']!: (_) => LoginScreen(),
+        routes['register']!: (_) => RegisterScreen(),
       },
     );
   }

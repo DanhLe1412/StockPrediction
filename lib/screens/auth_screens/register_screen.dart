@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stock_prediction/common_widgets/CustomButton.dart';
 import 'package:stock_prediction/screens/auth_screens/auth_screen.dart';
 import 'package:stock_prediction/screens/auth_screens/widgets/Input.dart';
+import 'package:stock_prediction/services/Auth.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -11,8 +12,31 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  bool _showPassword = false;
-  bool _show2ndPassword = false;
+  bool _showPassword = true;
+  bool _show2ndPassword = true;
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _2ndPasswordController = TextEditingController();
+
+  String get _email => _emailController.text;
+
+  String get _password => _passwordController.text;
+
+  String get _2ndPassword => _2ndPasswordController.text;
+
+  final AuthBase auth = Auth();
+
+  void _submit() {
+    try {
+      if (_password == _2ndPassword) {
+        auth.createUserWithEmailAndPassword(_email, _password);
+        Navigator.of(context).pop();
+      }
+    } catch(e) {
+      print(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +47,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
         Input(
           label: 'Email',
           hint: 'abc@gmail.com',
+          controller: _emailController,
         ),
         SizedBox(height: 16),
         Input(
           label: 'Password',
-          obscureText: true,
+          controller: _passwordController,
+          obscureText: _showPassword,
           suffixIcon: IconButton(
             onPressed: () {
               setState(() {
@@ -42,7 +68,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         SizedBox(height: 16),
         Input(
           label: 'Input your password again',
-          obscureText: true,
+          controller: _2ndPasswordController,
+          obscureText: _show2ndPassword,
           suffixIcon: IconButton(
             onPressed: () {
               setState(() {
@@ -80,7 +107,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ],
       ),
       button: CustomButton(
-        onPressed: () {},
+        onPressed: _submit,
         text: 'Register',
         mode: 'light',
       ),
