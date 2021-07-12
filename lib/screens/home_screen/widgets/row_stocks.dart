@@ -65,7 +65,6 @@ class RowStocks extends StatelessWidget {
         value: '780,64',
         changes: '+0.20',
       ),
-      SizedBox(height: 16),
       RowStock(
         stockId: 'aapl',
         brand: 'Apple Inc.',

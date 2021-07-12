@@ -46,7 +46,9 @@ class _BottomHalfState extends State<BottomHalf> {
               ),
             ],
           ),
+          SizedBox(height: 32),
           BuyButton(),
+          SizedBox(height: 16),
         ],
       ),
     );

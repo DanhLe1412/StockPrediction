@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:stock_prediction/constants.dart';
 import 'package:stock_prediction/screens/detail_screen/widgets/header.dart';
 
 import 'package:stock_prediction/screens/detail_screen/widgets/line_chart_custom.dart';
@@ -40,7 +41,7 @@ class _TopHalfState extends State<TopHalf> {
                       maxHeight: 250,
                     ),
                     child: Padding(
-                      padding: EdgeInsets.all(24),
+                      padding: EdgeInsets.all(horizontalPadding),
                       child: LineChartCustom(),
                     ),
                   ),

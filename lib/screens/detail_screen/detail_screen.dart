@@ -12,7 +12,6 @@ class DetailScreen extends StatelessWidget {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
-        backgroundColor: Theme.of(context).primaryColor,
         body: SafeArea(
           child: SingleChildScrollView(
             child: Column(

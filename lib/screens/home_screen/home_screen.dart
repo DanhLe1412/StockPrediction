@@ -1,5 +1,5 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:stock_prediction/constants.dart';
 import 'package:stock_prediction/screens/home_screen/widgets/app_navbar.dart';
 import 'package:stock_prediction/screens/home_screen/widgets/header.dart';
 import 'package:stock_prediction/screens/home_screen/widgets/info_card.dart';
@@ -18,12 +18,14 @@ class HomeScreen extends StatelessWidget {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
-        backgroundColor: Theme.of(context).primaryColor,
         body: SafeArea(
           child: ListView(
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 8.0, left: 16, right: 16),
+                padding: const EdgeInsets.only(
+                    top: 8.0,
+                    left: horizontalPadding,
+                    right: horizontalPadding),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
