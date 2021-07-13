@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stock_prediction/common_widgets/CustomButton.dart';
+import 'package:stock_prediction/constants.dart';
+import 'package:stock_prediction/helpers.dart';
 import 'package:stock_prediction/screens/auth_screens/auth_screen.dart';
 import 'package:stock_prediction/screens/auth_screens/widgets/Input.dart';
 import 'package:stock_prediction/services/Auth.dart';
@@ -14,7 +16,9 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   bool _showPassword = true;
   bool _show2ndPassword = true;
-
+  bool _submitEnabled = false;
+  bool _submitted = false;
+  final AccountValidator validator = new AccountValidator();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _2ndPasswordController = TextEditingController();
@@ -29,29 +33,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void _submit() {
     try {
-      if (_password == _2ndPassword) {
+      setState(() {
+        _submitted = true;
+      });
+      if (_password == _2ndPassword &&
+          validator.errs['email']!.isEmpty &&
+          validator.errs['password']!.isEmpty) {
         auth.createUserWithEmailAndPassword(_email, _password);
-        Navigator.of(context).pop();
+        Navigator.of(context).pushReplacementNamed(routes['sign_in']!);
       }
-    } catch(e) {
+    } catch (e) {
       print(e.toString());
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_submitted)
+      _submitEnabled = validator.errs['email']!.isEmpty &&
+          validator.errs['password']!.isEmpty;
+
     return AuthScreen(
       title: 'Let\'s register.',
       subtitle: 'Welcome to Stock Prediction!',
       children: [
         Input(
           label: 'Email',
+          textInputAction: TextInputAction.next,
+          errorText: _submitted ? validator.errs['email'] : '',
           hint: 'abc@gmail.com',
           controller: _emailController,
         ),
         SizedBox(height: 16),
         Input(
           label: 'Password',
+          textInputAction: TextInputAction.next,
+          errorText: _submitted ? validator.errs['password'] : '',
           controller: _passwordController,
           obscureText: _showPassword,
           suffixIcon: IconButton(
@@ -68,6 +85,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
         SizedBox(height: 16),
         Input(
           label: 'Input your password again',
+          onEditingComplete: _submit,
+          errorText:
+              _submitted ? (_password == _2ndPassword
+                  ? ''
+                  : 'Your password must be the same') : '',
+          textInputAction: TextInputAction.done,
           controller: _2ndPasswordController,
           obscureText: _show2ndPassword,
           suffixIcon: IconButton(
@@ -107,7 +130,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ],
       ),
       button: CustomButton(
-        onPressed: _submit,
+        onPressed: _submitEnabled ? _submit : null,
         text: 'Register',
         mode: 'light',
       ),

@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:stock_prediction/constants.dart';
 import 'package:stock_prediction/screens/auth_screens/register_screen.dart';
 import 'package:stock_prediction/screens/auth_screens/login_screen.dart';
@@ -18,6 +19,11 @@ class StockPrediction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
     return MaterialApp(
       title: 'Stock Prediction',
       debugShowCheckedModeBanner: false,

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:stock_prediction/common_widgets/CustomButton.dart';
 import 'package:stock_prediction/constants.dart';
+import 'package:stock_prediction/helpers.dart';
 import 'package:stock_prediction/screens/auth_screens/auth_screen.dart';
 import 'package:stock_prediction/screens/auth_screens/widgets/Input.dart';
-import 'package:stock_prediction/screens/home_screen/home_screen.dart';
 import 'package:stock_prediction/services/Auth.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -15,6 +15,9 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _showPassword = false;
+  bool _submitted = false;
+  bool _submitEnabled = true;
+  final AccountValidator validator = new AccountValidator();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -24,10 +27,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final AuthBase auth = Auth();
 
-  void _submit() {
+  void _submit() async {
     try {
-      auth.signInWithEmailAndPassword(_email, _password);
-      Navigator.of(context).pushNamed(routes['home']!);
+      setState(() {
+        _submitted = true;
+      });
+      if (validator.errs['email']!.isEmpty &&
+          validator.errs['password']!.isEmpty) {
+        await auth.signInWithEmailAndPassword(_email, _password);
+        Navigator.of(context).pushNamed(routes['home']!);
+      }
     } catch (e) {
       print(e.toString());
     }
@@ -35,18 +44,34 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_submitted)
+      _submitEnabled = validator.errs['email']!.isEmpty &&
+          validator.errs['password']!.isEmpty;
     return AuthScreen(
       title: 'Let\'s sign you in.',
       subtitle: 'Welcome back.\nYou\'ve been missed!',
       children: [
         Input(
           label: 'Email',
+          onChanged: (String email) {
+            validator.emailValidate(_email);
+            setState(() {});
+          },
+          errorText: _submitted ? validator.errs['email'] : null,
           hint: 'abc@gmail.com',
           controller: _emailController,
+          textInputAction: TextInputAction.next,
         ),
         SizedBox(height: 16),
         Input(
           obscureText: true,
+          textInputAction: TextInputAction.done,
+          onChanged: (String password) {
+            validator.passwordValidate(_password);
+            setState(() {});
+          },
+          errorText: _submitted ? validator.errs['password'] : null,
+          onEditingComplete: _submit,
           label: 'Password',
           controller: _passwordController,
           suffixIcon: IconButton(
@@ -86,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ),
       button: CustomButton(
-        onPressed: _submit,
+        onPressed: _submitEnabled ? _submit : null,
         text: 'Login',
         mode: 'light',
       ),

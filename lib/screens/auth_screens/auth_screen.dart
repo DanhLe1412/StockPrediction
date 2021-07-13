@@ -19,7 +19,6 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isKeyBoardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -27,58 +26,57 @@ class AuthScreen extends StatelessWidget {
       child: Scaffold(
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: horizontalPadding),
-          child: SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height - 16,
-              ),
+          child: _buildContent(context),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    return SingleChildScrollView(
+      child: Container(
+        padding: const EdgeInsets.only(top: 32, bottom: 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              borderRadius: BorderRadius.circular(10),
+              radius: 40,
               child: Padding(
-                padding: const EdgeInsets.only(top: 32, bottom: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      borderRadius: BorderRadius.circular(10),
-                      radius: 40,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SvgPicture.asset(
-                          'assets/images/left.svg',
-                          width: 40,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 32),
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 40,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(height: 40),
-                    ...children,
-                    SizedBox(height: 24),
-                    SizedBox(width: double.infinity, child: button),
-                    isKeyBoardOpen ? SizedBox(height: 32) : Spacer(),
-                    question,
-                    SizedBox(height: 24),
-                  ],
+                padding: const EdgeInsets.all(8.0),
+                child: SvgPicture.asset(
+                  'assets/images/left.svg',
+                  width: 40,
                 ),
               ),
             ),
-          ),
+            SizedBox(height: 32),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(height: 16),
+            Text(
+              subtitle,
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(height: 40),
+            ...children,
+            SizedBox(height: 24),
+            SizedBox(width: double.infinity, child: button),
+            SizedBox(height: 32),
+            question,
+            SizedBox(height: 24),
+          ],
         ),
       ),
     );
