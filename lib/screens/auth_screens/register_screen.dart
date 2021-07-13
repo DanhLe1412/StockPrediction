@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:stock_prediction/common_widgets/CustomButton.dart';
 import 'package:stock_prediction/constants.dart';
 import 'package:stock_prediction/helpers.dart';
@@ -16,7 +18,7 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   bool _showPassword = true;
   bool _show2ndPassword = true;
-  bool _submitEnabled = false;
+  bool _submitEnabled = true;
   bool _submitted = false;
   final AccountValidator validator = new AccountValidator();
   final TextEditingController _emailController = TextEditingController();
@@ -31,7 +33,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   final AuthBase auth = Auth();
 
-  void _submit() {
+  Future<void> _submit() async {
     try {
       setState(() {
         _submitted = true;
@@ -39,11 +41,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
       if (_password == _2ndPassword &&
           validator.errs['email']!.isEmpty &&
           validator.errs['password']!.isEmpty) {
-        auth.createUserWithEmailAndPassword(_email, _password);
+        await auth.createUserWithEmailAndPassword(_email, _password);
         Navigator.of(context).pushReplacementNamed(routes['sign_in']!);
       }
-    } catch (e) {
-      print(e.toString());
+    } on FirebaseAuthException catch (e) {
+      Alert(
+        context: context,
+        style: AlertStyle(
+          titleStyle: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+            color: Colors.red,
+          ),
+          descStyle: TextStyle(fontSize: 14, color: Colors.black87),
+        ),
+        type: AlertType.error,
+        title: e.code.toUpperCase(),
+        desc: e.message,
+      ).show();
     }
   }
 
@@ -59,6 +74,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
       children: [
         Input(
           label: 'Email',
+          onChanged: (String email) {
+            validator.emailValidate(_email);
+            setState(() {});
+          },
           textInputAction: TextInputAction.next,
           errorText: _submitted ? validator.errs['email'] : '',
           hint: 'abc@gmail.com',
@@ -67,6 +86,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
         SizedBox(height: 16),
         Input(
           label: 'Password',
+          onChanged: (String passsword) {
+            validator.passwordValidate(_password);
+            setState(() {});
+          },
           textInputAction: TextInputAction.next,
           errorText: _submitted ? validator.errs['password'] : '',
           controller: _passwordController,
@@ -85,11 +108,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
         SizedBox(height: 16),
         Input(
           label: 'Input your password again',
+          onChanged: (String secondPassword) {
+            setState(() {});
+          },
           onEditingComplete: _submit,
-          errorText:
-              _submitted ? (_password == _2ndPassword
+          errorText: _submitted
+              ? (_password == _2ndPassword
                   ? ''
-                  : 'Your password must be the same') : '',
+                  : 'Your password must be the same')
+              : '',
           textInputAction: TextInputAction.done,
           controller: _2ndPasswordController,
           obscureText: _show2ndPassword,

@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:stock_prediction/common_widgets/CustomButton.dart';
 import 'package:stock_prediction/constants.dart';
 import 'package:stock_prediction/helpers.dart';
@@ -27,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final AuthBase auth = Auth();
 
-  void _submit() async {
+  Future<void> _submit() async {
     try {
       setState(() {
         _submitted = true;
@@ -37,8 +39,21 @@ class _LoginScreenState extends State<LoginScreen> {
         await auth.signInWithEmailAndPassword(_email, _password);
         Navigator.of(context).pushNamed(routes['home']!);
       }
-    } catch (e) {
-      print(e.toString());
+    } on FirebaseAuthException catch (e) {
+      Alert(
+        context: context,
+        style: AlertStyle(
+          titleStyle: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+            color: Colors.red,
+          ),
+          descStyle: TextStyle(fontSize: 14, color: Colors.black87),
+        ),
+        type: AlertType.error,
+        title: e.code.toUpperCase(),
+        desc: e.message,
+      ).show();
     }
   }
 
@@ -64,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         SizedBox(height: 16),
         Input(
-          obscureText: true,
+          obscureText: _showPassword,
           textInputAction: TextInputAction.done,
           onChanged: (String password) {
             validator.passwordValidate(_password);
