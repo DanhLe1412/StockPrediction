@@ -80,7 +80,7 @@ class _LandingPageState extends State<LandingPage> {
               Expanded(
                 child: CustomButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/register');
+                    Navigator.pushReplacementNamed(context, '/register');
                   },
                   text: 'Register',
                   mode: 'light',

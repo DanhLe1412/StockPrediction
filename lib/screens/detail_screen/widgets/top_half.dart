@@ -1,5 +1,6 @@
 
 
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:stock_prediction/constants.dart';
 import 'package:stock_prediction/screens/detail_screen/widgets/header.dart';
@@ -7,7 +8,11 @@ import 'package:stock_prediction/screens/detail_screen/widgets/header.dart';
 import 'package:stock_prediction/screens/detail_screen/widgets/line_chart_custom.dart';
 
 class TopHalf extends StatefulWidget {
-  const TopHalf({Key? key}) : super(key: key);
+  final String symbol;
+
+  final List<FlSpot>? spots;
+
+  const TopHalf({Key? key, required this.symbol, this.spots}) : super(key: key);
 
   @override
   _TopHalfState createState() => _TopHalfState();
@@ -29,7 +34,7 @@ class _TopHalfState extends State<TopHalf> {
           children: [
             Column(
               children: [
-                Header(),
+                Header(symbol: widget.symbol,),
                 SizedBox(height: 40),
                 Container(
                   decoration: BoxDecoration(
@@ -42,7 +47,7 @@ class _TopHalfState extends State<TopHalf> {
                     ),
                     child: Padding(
                       padding: EdgeInsets.all(horizontalPadding),
-                      child: LineChartCustom(),
+                      child: LineChartCustom(spots: widget.spots),
                     ),
                   ),
                 ),

@@ -16,12 +16,15 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool _showPassword = false;
+  bool _hidePassword = true;
   bool _submitted = false;
   bool _submitEnabled = true;
+  bool _isLoading = false;
   final AccountValidator validator = new AccountValidator();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
 
   String get _email => _emailController.text;
 
@@ -33,11 +36,12 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       setState(() {
         _submitted = true;
+        _isLoading = true;
       });
       if (validator.errs['email']!.isEmpty &&
           validator.errs['password']!.isEmpty) {
         await auth.signInWithEmailAndPassword(_email, _password);
-        Navigator.of(context).pushNamed(routes['home']!);
+        Navigator.of(context).pushReplacementNamed(routes['home']!);
       }
     } on FirebaseAuthException catch (e) {
       Alert(
@@ -54,13 +58,18 @@ class _LoginScreenState extends State<LoginScreen> {
         title: e.code.toUpperCase(),
         desc: e.message,
       ).show();
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     if (_submitted)
-      _submitEnabled = validator.errs['email']!.isEmpty &&
+      _submitEnabled = !_isLoading &&
+          validator.errs['email']!.isEmpty &&
           validator.errs['password']!.isEmpty;
     return AuthScreen(
       title: 'Let\'s sign you in.',
@@ -72,6 +81,12 @@ class _LoginScreenState extends State<LoginScreen> {
             validator.emailValidate(_email);
             setState(() {});
           },
+          onEditingComplete: () {
+            if (validator.errs['email']!.isEmpty) {
+              _passwordFocusNode.requestFocus();
+            } else _emailFocusNode.requestFocus();
+          },
+          focusNode: _emailFocusNode,
           errorText: _submitted ? validator.errs['email'] : null,
           hint: 'abc@gmail.com',
           controller: _emailController,
@@ -79,7 +94,8 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         SizedBox(height: 16),
         Input(
-          obscureText: _showPassword,
+          obscureText: _hidePassword,
+          focusNode: _passwordFocusNode,
           textInputAction: TextInputAction.done,
           onChanged: (String password) {
             validator.passwordValidate(_password);
@@ -92,10 +108,10 @@ class _LoginScreenState extends State<LoginScreen> {
           suffixIcon: IconButton(
             onPressed: () {
               setState(() {
-                _showPassword = !_showPassword;
+                _hidePassword = !_hidePassword;
               });
             },
-            icon: _showPassword
+            icon: _hidePassword
                 ? Icon(Icons.visibility, color: Colors.white24)
                 : Icon(Icons.visibility_off, color: Colors.white24),
           ),

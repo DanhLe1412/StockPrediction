@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Header extends StatelessWidget {
@@ -19,7 +20,7 @@ class Header extends StatelessWidget {
             ),
             SizedBox(height: 4),
             Text(
-              'Kojiro Hyuga',
+              FirebaseAuth.instance.currentUser!.email!,
               style: TextStyle(
                 fontSize: 22,
               ),

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:stock_prediction/constants.dart';
 import 'package:stock_prediction/screens/home_screen/widgets/app_navbar.dart';
@@ -5,6 +6,7 @@ import 'package:stock_prediction/screens/home_screen/widgets/header.dart';
 import 'package:stock_prediction/screens/home_screen/widgets/info_card.dart';
 import 'package:stock_prediction/screens/home_screen/widgets/row_stocks.dart';
 import 'package:stock_prediction/screens/home_screen/widgets/search_box.dart';
+import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);

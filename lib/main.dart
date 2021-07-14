@@ -7,10 +7,16 @@ import 'package:stock_prediction/screens/auth_screens/login_screen.dart';
 import 'package:stock_prediction/screens/detail_screen/detail_screen.dart';
 import 'package:stock_prediction/screens/home_screen/home_screen.dart';
 import 'package:stock_prediction/screens/landing_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
+import 'package:http/http.dart' as http;
+
+class Stock {}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Firebase.initializeApp();
+  // requestStockIfNotYet();
   runApp(StockPrediction());
 }
 

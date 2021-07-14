@@ -13,8 +13,10 @@ class Input extends StatefulWidget {
   final VoidCallback? onEditingComplete;
   final validationCallback? onChanged;
   final String? errorText;
+  final FocusNode? focusNode;
 
   Input({
+    this.focusNode,
     this.errorText,
     this.onChanged,
     this.onEditingComplete,
@@ -63,6 +65,7 @@ class _InputState extends State<Input> {
       },
       obscureText: widget.obscureText,
       textInputAction: widget.textInputAction,
+      focusNode: widget.focusNode,
       decoration: InputDecoration(
         errorText: widget.errorText == '' ? null : widget.errorText,
         labelText: widget.label,

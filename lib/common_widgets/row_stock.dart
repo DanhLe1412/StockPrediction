@@ -1,7 +1,9 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class RowStock extends StatefulWidget {
+class RowStock extends StatelessWidget {
   const RowStock(
       {Key? key,
       required this.stockId,
@@ -16,11 +18,6 @@ class RowStock extends StatefulWidget {
   final String? value;
   final String changes;
 
-  @override
-  _RowStockState createState() => _RowStockState();
-}
-
-class _RowStockState extends State<RowStock> {
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -38,7 +35,7 @@ class _RowStockState extends State<RowStock> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.stockId.toUpperCase(),
+                    stockId.toUpperCase(),
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
@@ -47,7 +44,7 @@ class _RowStockState extends State<RowStock> {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    widget.brand,
+                    brand,
                     style: TextStyle(color: Colors.white54),
                   ),
                 ],
@@ -60,10 +57,10 @@ class _RowStockState extends State<RowStock> {
                   _buildStockValue(),
                   SizedBox(height: 4),
                   Text(
-                    widget.changes,
+                    changes,
                     style: TextStyle(
                       color: Color(0xFF31D8FF),
-                      fontSize: widget.value != null ? 12 : 20,
+                      fontSize: value != null ? 12 : 20,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -77,9 +74,9 @@ class _RowStockState extends State<RowStock> {
   }
 
   Widget _buildStockValue() {
-    return widget.value != null
+    return value != null
         ? Text(
-            widget.value!,
+            value!,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w500,
@@ -89,7 +86,7 @@ class _RowStockState extends State<RowStock> {
   }
 
   Widget _buildChart() {
-    return widget.spots != null && widget.spots!.length > 0
+    return spots != null && spots!.length > 0
         ? ConstrainedBox(
             constraints: BoxConstraints(maxWidth: 100, maxHeight: 50),
             child: LineChart(
@@ -113,7 +110,7 @@ class _RowStockState extends State<RowStock> {
                   LineChartBarData(
                     isCurved: true,
                     dotData: FlDotData(show: false),
-                    spots: widget.spots,
+                    spots: spots,
                     colors: [Color(0xFF31D8FF)],
                   ),
                 ],
@@ -121,5 +118,25 @@ class _RowStockState extends State<RowStock> {
             ),
           )
         : Text('');
+  }
+}
+
+class Album {
+  final int userId;
+  final int id;
+  final String title;
+
+  Album({
+    required this.userId,
+    required this.id,
+    required this.title,
+  });
+
+  factory Album.fromJson(Map<String, dynamic> json) {
+    return Album(
+      userId: json['userId'],
+      id: json['id'],
+      title: json['title'],
+    );
   }
 }
