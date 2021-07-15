@@ -144,7 +144,7 @@ class _DetailScreenState extends State<DetailScreen> {
           '/stock/v2/get-chart',
           {'interval': '5m', 'symbol': 'AAPL', 'range': '1d', 'region': 'US'}),
       headers: {
-        'x-rapidapi-key': 'b33f1a6decmsh753b2c3ed2bde62p187d7cjsnce0e1e090a5b',
+        'x-rapidapi-key': 'your-api-key',
         'x-rapidapi-host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
       },
     );
